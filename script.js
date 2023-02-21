@@ -1,6 +1,6 @@
 async function getUser() {
     const req = await fetch('https://randomuser.me/api/');
-    if (!req.ok) await console.log(req.json());
+    if (!req.ok) console.log(req.json());
     const { results } = await req.json();
     const user = results[0];
     let favicon = document.getElementById('favicon');
