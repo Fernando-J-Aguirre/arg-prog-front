@@ -18,9 +18,11 @@ function loadNavUser(user) {
             <div class="profile-pic-m-container">
                 <img src="${user.picture.medium}" alt="profile picture" class="profile-pic-m">
             </div>
-            <a href="#top" class="name nav-link">${user.name.first} ${user.name.last}</a>`
+            <a href="#top" class="name link">${user.name.first} ${user.name.last}</a>`
     }
     div.innerHTML = output;
+    let scrollLink = document.querySelector('.link');
+    scrollToSection(scrollLink);
 }
 
 function loadUserData(user) {
@@ -94,13 +96,17 @@ function loadContactUserData(user) {
     div.innerHTML = output;
 }
 
+function scrollToSection(selector) {
+    selector.addEventListener('click', e => {
+        e.preventDefault();
+        const section = document.querySelector(selector.getAttribute('href'));
+        if (section) section.scrollIntoView({ behavior: 'smooth' });
+    })
+}
+
 const navLinks = document.querySelectorAll('.nav-link');
 navLinks.forEach(link => {
-    link.addEventListener('click', e => {
-        e.preventDefault();
-        const section = document.querySelector(link.getAttribute('href'));
-        section.scrollIntoView({ behavior: 'smooth' });
-    });
+    scrollToSection(link);
 });
 
 const navbar = document.querySelector('#nav');
