@@ -1,17 +1,29 @@
 async function getUser() {
     const req = await fetch('https://randomuser.me/api/');
-    if (!req.ok) console.log(req.json());
+    if (!req.ok) console.log(await req.json());
     const { results } = await req.json();
     const user = results[0];
-    let favicon = document.getElementById('favicon');
-    favicon.href = user.picture.thumbnail;
+    if (!user) handleLoad();
+    loadFavicon(user)
     loadNavUser(user);
     loadAdditionalUserInfo(user);
     loadContactUserData(user)
 }
 
+function handleLoad() {
+    const body = document.getElementsByTagName('body');
+    body[0].innerHTML = '<h1 class="loading">Loading...</h1>';
+}
+
+function loadFavicon(user) {
+    if (user) {
+        const favicon = document.getElementById('favicon');
+        favicon.href = user.picture.thumbnail;
+    }
+}
+
 function loadNavUser(user) {
-    let div = document.querySelector('.nav-left');
+    const div = document.querySelector('.nav-left');
     let output = '';
     if (user) {
         output += `
@@ -21,21 +33,23 @@ function loadNavUser(user) {
             <a href="#top" class="name link">${user.name.first} ${user.name.last}</a>`
     }
     div.innerHTML = output;
-    let scrollLink = document.querySelector('.link');
+    const scrollLink = document.querySelector('.link');
     scrollToSection(scrollLink);
 }
 
 function loadUserData(user) {
-    return {
-        "phone": user.phone,
-        "location": user.location.street.name + ' ' + user.location.street.number + ', ' + user.location.city + ', ' + user.location.country,
-        "email": user.email
-    };
+    if (user) {
+        return {
+            "phone": user.phone,
+            "location": user.location.street.name + ' ' + user.location.street.number + ', ' + user.location.city + ', ' + user.location.country,
+            "email": user.email
+        };
+    }
 }
 
 function loadAdditionalUserInfo(user) {
-    let div = document.querySelector('.personal-info-container');
-    let userData = loadUserData(user);
+    const div = document.querySelector('.personal-info-container');
+    const userData = loadUserData(user);
     let output = '';
     if (user) {
         output += `
@@ -81,8 +95,8 @@ function stringifyDate(dateString) {
 }
 
 function loadContactUserData(user) {
-    let loadedUser = loadUserData(user);
-    let div = document.querySelector('.contact-info');
+    const loadedUser = loadUserData(user);
+    const div = document.querySelector('.contact-info');
     let output = '';
     if (user) {
         output += `
