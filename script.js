@@ -1,13 +1,25 @@
 async function getUser() {
     const req = await fetch('https://randomuser.me/api/');
-    if (!req.ok) console.log(req.json());
+    if (!req.ok) console.log(await req.json());
     const { results } = await req.json();
     const user = results[0];
-    let favicon = document.getElementById('favicon');
-    favicon.href = user.picture.thumbnail;
+    if (!user) handleLoad();
+    loadFavicon(user)
     loadNavUser(user);
     loadAdditionalUserInfo(user);
     loadContactUserData(user)
+}
+
+function handleLoad() {
+    let body = document.getElementsByTagName('body');
+    body[0].innerHTML = '<h1 class="loading">Loading...</h1>';
+}
+
+function loadFavicon(user) {
+    if (user) {
+        let favicon = document.getElementById('favicon');
+        favicon.href = user.picture.thumbnail;
+    }
 }
 
 function loadNavUser(user) {
@@ -18,17 +30,21 @@ function loadNavUser(user) {
             <div class="profile-pic-m-container">
                 <img src="${user.picture.medium}" alt="profile picture" class="profile-pic-m">
             </div>
-            <a href="#top" class="name nav-link">${user.name.first} ${user.name.last}</a>`
+            <a href="#top" class="name link">${user.name.first} ${user.name.last}</a>`
     }
     div.innerHTML = output;
+    let scrollLink = document.querySelector('.link');
+    scrollToSection(scrollLink);
 }
 
 function loadUserData(user) {
-    return {
-        "phone": user.phone,
-        "location": user.location.street.name + ' ' + user.location.street.number + ', ' + user.location.city + ', ' + user.location.country,
-        "email": user.email
-    };
+    if (user) {
+        return {
+            "phone": user.phone,
+            "location": user.location.street.name + ' ' + user.location.street.number + ', ' + user.location.city + ', ' + user.location.country,
+            "email": user.email
+        };
+    }
 }
 
 function loadAdditionalUserInfo(user) {
@@ -94,13 +110,17 @@ function loadContactUserData(user) {
     div.innerHTML = output;
 }
 
+function scrollToSection(selector) {
+    selector.addEventListener('click', e => {
+        e.preventDefault();
+        const section = document.querySelector(selector.getAttribute('href'));
+        if (section) section.scrollIntoView({ behavior: 'smooth' });
+    })
+}
+
 const navLinks = document.querySelectorAll('.nav-link');
 navLinks.forEach(link => {
-    link.addEventListener('click', e => {
-        e.preventDefault();
-        const section = document.querySelector(link.getAttribute('href'));
-        section.scrollIntoView({ behavior: 'smooth' });
-    });
+    scrollToSection(link);
 });
 
 const navbar = document.querySelector('#nav');
