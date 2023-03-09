@@ -11,19 +11,19 @@ async function getUser() {
 }
 
 function handleLoad() {
-    let body = document.getElementsByTagName('body');
+    const body = document.getElementsByTagName('body');
     body[0].innerHTML = '<h1 class="loading">Loading...</h1>';
 }
 
 function loadFavicon(user) {
     if (user) {
-        let favicon = document.getElementById('favicon');
+        const favicon = document.getElementById('favicon');
         favicon.href = user.picture.thumbnail;
     }
 }
 
 function loadNavUser(user) {
-    let div = document.querySelector('.nav-left');
+    const div = document.querySelector('.nav-left');
     let output = '';
     if (user) {
         output += `
@@ -33,7 +33,7 @@ function loadNavUser(user) {
             <a href="#top" class="name link">${user.name.first} ${user.name.last}</a>`
     }
     div.innerHTML = output;
-    let scrollLink = document.querySelector('.link');
+    const scrollLink = document.querySelector('.link');
     scrollToSection(scrollLink);
 }
 
@@ -48,8 +48,8 @@ function loadUserData(user) {
 }
 
 function loadAdditionalUserInfo(user) {
-    let div = document.querySelector('.personal-info-container');
-    let userData = loadUserData(user);
+    const div = document.querySelector('.personal-info-container');
+    const userData = loadUserData(user);
     let output = '';
     if (user) {
         output += `
@@ -95,8 +95,8 @@ function stringifyDate(dateString) {
 }
 
 function loadContactUserData(user) {
-    let loadedUser = loadUserData(user);
-    let div = document.querySelector('.contact-info');
+    const loadedUser = loadUserData(user);
+    const div = document.querySelector('.contact-info');
     let output = '';
     if (user) {
         output += `
